@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.sistema_estoque.estoque.model.Product;
 import com.sistema_estoque.estoque.service.ProductService;
+
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @RestController
 @RequestMapping("/api/products")
@@ -34,6 +38,11 @@ public class ProductController {
     public ResponseEntity<List<Product>> getAllProducts() {
         var products = productService.getAllAProducts();
         return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable("id") @Positive @NotNull Long id) {
+        return ResponseEntity.ok(productService.getProductById(id));
     }
 
     private URI buildUserUri(UriComponentsBuilder uri, Long userId) {
