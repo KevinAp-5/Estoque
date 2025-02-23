@@ -72,4 +72,12 @@ public class ProductService {
         Product savedProduct = productRepository.save(result);
         return ProductMapper.toDTO(savedProduct);
     }
+
+    @Transactional
+    public void deleteProductById(@Positive @NotNull Long id) {
+        var productToDelete = productRepository.findById(id).orElseThrow(
+            () -> new ProductNotFoundException("Product to be deleted not found with ID: " + id)
+        );
+        productRepository.delete(productToDelete);
+    }
 }

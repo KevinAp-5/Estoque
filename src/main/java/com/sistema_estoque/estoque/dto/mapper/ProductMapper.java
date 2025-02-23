@@ -1,8 +1,11 @@
 package com.sistema_estoque.estoque.dto.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.sistema_estoque.estoque.dto.ProductDTO;
 import com.sistema_estoque.estoque.model.Product;
 
+@Component
 public class ProductMapper {
     private ProductMapper() {}
 
