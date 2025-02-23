@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.sistema_estoque.estoque.model.Product;
+import com.sistema_estoque.estoque.dto.ProductDTO;
 import com.sistema_estoque.estoque.service.ProductService;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -28,20 +29,20 @@ public class ProductController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product, UriComponentsBuilder uri) {
-        Product savedProduct = productService.createProduct(product);
-        URI uriProduct = buildUserUri(uri, savedProduct.getId());
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody @Valid ProductDTO productDTO, UriComponentsBuilder uri) {
+        ProductDTO savedProduct = productService.createProduct(productDTO);
+        URI uriProduct = buildUserUri(uri, savedProduct.id());
         return ResponseEntity.created(uriProduct).body(savedProduct);
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
         var products = productService.getAllAProducts();
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") @Positive @NotNull Long id) {
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable @Positive @NotNull Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 

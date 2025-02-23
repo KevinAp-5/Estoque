@@ -2,6 +2,8 @@ package com.sistema_estoque.estoque.model;
 
 import java.math.BigDecimal;
 
+import com.sistema_estoque.estoque.dto.ProductDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +29,13 @@ public class Product {
     @Column(precision = 10, scale = 2)
     private BigDecimal price;
     private String category;
+
+    public Product(ProductDTO dto) {
+        this.id = dto.id();
+        this.name = dto.name();
+        this.price = dto.price();
+        this.category = dto.category();
+    }
 
     public Product(Long id, String name, BigDecimal price, String category) {
         this.id = id;
