@@ -22,9 +22,17 @@ import com.sistema_estoque.estoque.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Controller for managing products in the CRUD inventory system.
+ * Provides endpoints for creating, retrieving, updating, and deleting products.
+ * 
+ * Author: Keven
+ */
 @RestController
 @RequestMapping("/api/products/")
+@Slf4j
 public class ProductController {
     public final ProductService productService;
 
@@ -32,37 +40,75 @@ public class ProductController {
         this.productService = productService;
     }
 
+    /**
+     * Creates a new product.
+     *
+     * @param productDTO The DTO containing product information.
+     * @param uri The UriComponentsBuilder for building the response URI.
+     * @return ResponseEntity containing the created ProductDTO and the location URI.
+     */
     @PostMapping()
     public ResponseEntity<ProductDTO> createProduct(@RequestBody @Valid ProductDTO productDTO, UriComponentsBuilder uri) {
+        log.info("Received request to CREATE product: {}", productDTO);
         ProductDTO savedProduct = productService.createProduct(productDTO);
         URI uriProduct = buildUserUri(uri, savedProduct.id());
+        log.info("Product created successfully with ID: {}", savedProduct.id());
         return ResponseEntity.created(uriProduct).body(savedProduct);
     }
 
+    /**
+     * Retrieves all products.
+     *
+     * @return ResponseEntity containing a list of ProductDTOs.
+     */
     @GetMapping()
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        log.info("Received request to GET all products");
         var products = productService.getAllAProducts();
+        log.info("Retrieved {} products", products.size());
         return ResponseEntity.ok(products);
     }
 
+    /**
+     * Retrieves a product by its ID.
+     *
+     * @param id The ID of the product to retrieve.
+     * @return ResponseEntity containing the ProductDTO corresponding to the given ID.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable @Positive @NotNull Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+        log.info("Received request to GET product with ID: {}", id);
+        ProductDTO product = productService.getProductById(id);
+        log.info("Retrieved product: {}", product);
+        return ResponseEntity.ok(product);
     }
 
-    @PutMapping()
-    public ResponseEntity<ProductDTO> updateProduct(@RequestBody @NotNull ProductDTO dto) {
-        return ResponseEntity.ok(productService.updateProduct(dto));
-    }
-
+    /**
+     * Updates an existing product by its ID with the provided DTO.
+     *
+     * @param id The ID of the product to update.
+     * @param dto The DTO containing updated information for the product.
+     * @return ResponseEntity containing the updated ProductDTO.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProductById(@PathVariable @Positive @NotNull Long id, @RequestBody @Valid UpdateProductDTO dto) {
-        return ResponseEntity.ok(productService.updateProductById(id, dto));
+        log.info("Received request to UPDATE product with ID: {}", id);
+        ProductDTO updatedProduct = productService.updateProductById(id, dto);
+        log.info("Updated product: {}", updatedProduct);
+        return ResponseEntity.ok(updatedProduct);
     }
 
+    /**
+     * Deletes a product by its ID.
+     *
+     * @param id The ID of the product to delete.
+     * @return ResponseEntity containing a message indicating successful deletion.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseMessage> deleteProductById(@PathVariable @Positive @NotNull Long id) {
+        log.info("Received request to DELETE product with ID: {}", id);
         productService.deleteProductById(id);
+        log.info("Product deleted successfully with ID: {}", id);
         return ResponseEntity.ok(new ResponseMessage("Product deleted successfully."));
     }
 
