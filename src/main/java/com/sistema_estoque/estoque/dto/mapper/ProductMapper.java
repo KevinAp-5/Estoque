@@ -1,5 +1,6 @@
-package com.sistema_estoque.estoque.dto;
+package com.sistema_estoque.estoque.dto.mapper;
 
+import com.sistema_estoque.estoque.dto.ProductDTO;
 import com.sistema_estoque.estoque.model.Product;
 
 public class ProductMapper {
